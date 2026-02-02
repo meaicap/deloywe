@@ -1,0 +1,24 @@
+services:
+  # Backend Service
+  - type: web
+    name: ai-study-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.0
+    autoDeploy: true
+
+  # Frontend Service (Static Site)
+  - type: web
+    name: ai-study-frontend
+    env: node
+    buildCommand: cd frontend && npm install && npm run build
+    startCommand: cd frontend && npm run preview
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+    # NOTE: Render Static Sites are better, but if sticking to web service for everything, this works.
+    # Actually, for Render, it's better to split them into a Web Service (Python) and a Static Site (React).
+    # But for simplicity in a monorepo, 2 services is the way.
